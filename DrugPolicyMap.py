@@ -124,42 +124,13 @@ def geocode_location(location_str):
         print(f"[ERROR] geocoding {location_str}: {e}")
     return None
 
-def determine_source(link):
+def generate_description(title, summary, link):
     """
-    Extrae el nombre de la fuente basado en el dominio del enlace.
-    """
-    if "who.int" in link:
-        return "WHO Reports"
-    elif "cbc.ca" in link:
-        return "CBC News"
-    elif "eluniversal.com.mx" in link:
-        return "El Universal"
-    elif "elpais.com" in link:
-        return "El País"
-    else:
-        return "Unknown Source"
-
-def categorize_entry(title, summary):
-    """
-    Determina las categorías según los indicadores.
-    """
-    # Ejemplo simplificado; aquí puedes agregar más reglas.
-    if "cannabis" in title.lower() or "cannabis" in summary.lower():
-        return "Regulatory Framework → Substance Market"
-    elif "needle exchange" in title.lower():
-        return "Public Health → Harm Reduction"
-    elif "collaboration" in title.lower() or "WHO" in summary:
-        return "International Cooperation → WHO"
-    else:
-        return "Uncategorized"
-
-def generate_description(title, summary, link, source, indicator_category, content_category):
-    """
-    Genera una descripción coherente con el formato Umap.
+    Genera una descripción coherente incluso si el resumen o título están incompletos.
     """
     if not summary:
         summary = "Descripción no disponible."
-    description_text = f"# {title}\n**Resumen:** {summary}\n---\n**Fuente:** {source}\n**Categoría (Indicadores):** {indicator_category}\n**Categoría (Contenido):** {content_category}\n[[{link}|Fuente original]]"
+    description_text = f"**{title}**\n\n{summary}\n\n[[{link}|Ver la fuente]]"
     return description_text
 
 def generate_apa_citation(title, link, published):
@@ -174,6 +145,44 @@ def generate_apa_citation(title, link, published):
         link = "Enlace no disponible"
     return f"{title}. ({published}). [Blog post]. Recuperado de {link}"
 
+def determine_type(title, description):
+    """
+    Determina el tipo de contenido basado en palabras clave en el título o descripción.
+    """
+    keywords = {
+        "prohibicionista": ["prohibición", "guerra contra las drogas", "represión"],
+        "antiprohibicionista": ["regulación", "legalización", "reducción de daños"],
+        "educativo": ["capacitación", "curso", "información"],
+        "noticia": ["reportaje", "informe", "última hora"],
+        "opinión": ["editorial", "columna", "análisis"],
+    }
+    for tipo, palabras in keywords.items():
+        if any(palabra in title.lower() or palabra in description.lower() for palabra in palabras):
+            return tipo.capitalize()
+    return "Otro"
+
+def determine_category(title, description):
+    """
+    Determina la categoría y subcategoría basándose en los indicadores.
+    """
+    indicators = {
+        "Human Rights and Public Health": [
+            ("Harm Reduction", ["reducción de daños", "consumo supervisado", "naloxona"]),
+            ("Universal Access to Health Services", ["acceso universal", "servicios de salud", "atención integral"]),
+        ],
+        "Regulatory Framework": [
+            ("Regulation of Specific Substances", ["regulación", "psicodélicos", "cannabis"]),
+            ("Decriminalization of Personal Use", ["despenalización", "uso personal"]),
+        ],
+        # Agrega más categorías y subcategorías aquí
+    }
+
+    for category, subcategories in indicators.items():
+        for subcategory, keywords in subcategories:
+            if any(keyword in title.lower() or keyword in description.lower() for keyword in keywords):
+                return category, subcategory
+    return "Otros", "Sin subcategoría"
+
 def parse_feed(feed_url):
     feed = feedparser.parse(feed_url)
     entries = []
@@ -183,22 +192,29 @@ def parse_feed(feed_url):
         summary = getattr(e, 'summary', '')
         link = getattr(e, 'link', '')
         published = getattr(e, 'published', '')
+        source = getattr(e, 'source', 'Fuente desconocida')
 
-        source = determine_source(link)
-        indicator_category = categorize_entry(title, summary)
-        content_category = "News"  # Ajustar según el contenido real
+        image_url = None
+        if hasattr(e, 'media_content') and e.media_content:
+            image_url = e.media_content[0].get('url')
+        elif hasattr(e, 'media_thumbnail') and e.media_thumbnail:
+            image_url = e.media_thumbnail[0].get('url')
 
-        description = generate_description(title, summary, link, source, indicator_category, content_category)
+        description = generate_description(title, summary, link)
+        content_type = determine_type(title, summary)  # Determina el tipo de contenido
+        category, subcategory = determine_category(title, summary)  # Categoría y subcategoría
 
         new_entry = {
             "title": title,
             "summary": summary,
             "link": link,
             "published": published,
-            "source": source,
-            "indicator_category": indicator_category,
-            "content_category": content_category,
+            "image_url": image_url,
             "description": description,
+            "type": content_type,  # Tipo de contenido
+            "category": category,  # Categoría
+            "subcategory": subcategory,  # Subcategoría
+            "source": source,
             "lat": None,
             "lon": None
         }
@@ -226,17 +242,25 @@ def generate_geojson(data):
         lat = item.get("lat")
         lon = item.get("lon")
         if lat is not None and lon is not None:
+            title = item.get("title", "No Title")
+            link = item.get("link", "")
+            published = item.get("published", "")
+            image_url = item.get("image_url", None)
+            description = item.get("description", "Descripción no disponible.")
+            apa_citation = generate_apa_citation(title, link, published)
+
             feature = {
                 "type": "Feature",
                 "properties": {
-                    "title": item.get("title", "No Title"),
-                    "description": item.get("description", "Descripción no disponible."),
-                    "published": item.get("published", ""),
-                    "source": item.get("source", "Unknown Source"),
-                    "indicator_category": item.get("indicator_category", "Uncategorized"),
-                    "content_category": item.get("content_category", "Unknown"),
-                    "apa_citation": generate_apa_citation(item.get("title"), item.get("link"), item.get("published")),
-                    "url": item.get("link", ""),
+                    "title": title,
+                    "description": description,
+                    "published": published,
+                    "apa_citation": apa_citation,
+                    "category": item.get("category"),
+                    "subcategory": item.get("subcategory"),
+                    "type": item.get("type"),
+                    "source": item.get("source"),
+                    "image_url": image_url
                 },
                 "geometry": {
                     "type": "Point",
@@ -247,29 +271,24 @@ def generate_geojson(data):
 
     return geojson_data
 
-# Script principal
+# Proceso principal
 def main():
     master_data = load_master_data()
-    new_entries = []
+    all_entries = []
+
     for feed_url in RSS_FEEDS:
-        print(f"[INFO] Leyendo feed: {feed_url}")
-        feed_entries = parse_feed(feed_url)
-        for entry in feed_entries:
+        entries = parse_feed(feed_url)
+        for entry in entries:
             if not is_duplicate(entry, master_data):
-                new_entries.append(entry)
+                master_data.append(entry)
+                all_entries.append(entry)
 
-    if new_entries:
-        print(f"[INFO] Nuevas entradas detectadas: {len(new_entries)}")
-        new_geojson_data = generate_geojson(new_entries)
-        with open(OUTPUT_GEOJSON, "w", encoding="utf-8") as f:
-            json.dump(new_geojson_data, f, ensure_ascii=False, indent=2)
-        print("[OK] Archivo GeoJSON generado.")
+    save_master_data(master_data)
+    geojson_data = generate_geojson(all_entries)
 
-        master_data.extend(new_entries)
-        save_master_data(master_data)
-        print("[OK] master_data.json actualizado.")
-    else:
-        print("[INFO] No se encontraron nuevas entradas.")
+    with open(OUTPUT_GEOJSON, "w", encoding="utf-8") as f:
+        json.dump(geojson_data, f, ensure_ascii=False, indent=2)
+    print("[INFO] Archivo GEOJSON generado.")
 
 if __name__ == "__main__":
     main()
