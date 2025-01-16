@@ -2,8 +2,8 @@ name: update-map
 
 on:
   schedule:
-    - cron: "0 */7 * * *"  # Cada 7 horas
-  workflow_dispatch:  # Permitir ejecución manual
+    - cron: "0 */7 * * *"  # Ejecutar cada 7 horas
+  workflow_dispatch:  # Permitir ejecución manual desde GitHub
 
 jobs:
   update-map:
@@ -13,7 +13,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
       with:
-        fetch-depth: 0  # Garantiza que se descargue todo el historial para evitar conflictos
+        fetch-depth: 0  # Asegura que se descargue todo el historial para evitar conflictos
 
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -33,7 +33,9 @@ jobs:
       run: |
         git config --global user.name "GitHub Actions"
         git config --global user.email "actions@github.com"
-        git pull --rebase origin main
+        git stash  # Guarda cambios locales temporalmente
+        git pull --rebase origin main  # Descarga los últimos cambios remotos
+        git stash pop  # Restaura los cambios locales guardados
 
     - name: Commit and push changes
       run: |
