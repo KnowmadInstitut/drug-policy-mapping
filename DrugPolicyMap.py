@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""DrugPolicy_Map.py"""
+"DrugPolicyMap.py"
 
 import feedparser
 import re
@@ -125,18 +125,12 @@ def geocode_location(location_str):
     return None
 
 def generate_description(title, summary, link):
-    """
-    Genera una descripción coherente incluso si el resumen o título están incompletos.
-    """
     if not summary:
         summary = "Descripción no disponible."
     description_text = f"**{title}**\n\n{summary}\n\n[[{link}|Ver la fuente]]"
     return description_text
 
 def generate_apa_citation(title, link, published):
-    """
-    Genera una referencia APA7 válida incluso si faltan datos.
-    """
     if not title:
         title = "Sin título"
     if not published:
@@ -146,9 +140,6 @@ def generate_apa_citation(title, link, published):
     return f"{title}. ({published}). [Blog post]. Recuperado de {link}"
 
 def determine_type(title, description):
-    """
-    Determina el tipo de contenido basado en palabras clave en el título o descripción.
-    """
     keywords = {
         "prohibicionista": ["prohibición", "guerra contra las drogas", "represión"],
         "antiprohibicionista": ["regulación", "legalización", "reducción de daños"],
@@ -162,9 +153,6 @@ def determine_type(title, description):
     return "Otro"
 
 def determine_category(title, description):
-    """
-    Determina la categoría y subcategoría basándose en los indicadores.
-    """
     indicators = {
         "Human Rights and Public Health": [
             ("Harm Reduction", ["reducción de daños", "consumo supervisado", "naloxona"]),
@@ -174,7 +162,6 @@ def determine_category(title, description):
             ("Regulation of Specific Substances", ["regulación", "psicodélicos", "cannabis"]),
             ("Decriminalization of Personal Use", ["despenalización", "uso personal"]),
         ],
-        # Agrega más categorías y subcategorías aquí
     }
 
     for category, subcategories in indicators.items():
@@ -201,8 +188,8 @@ def parse_feed(feed_url):
             image_url = e.media_thumbnail[0].get('url')
 
         description = generate_description(title, summary, link)
-        content_type = determine_type(title, summary)  # Determina el tipo de contenido
-        category, subcategory = determine_category(title, summary)  # Categoría y subcategoría
+        content_type = determine_type(title, summary)
+        category, subcategory = determine_category(title, summary)
 
         new_entry = {
             "title": title,
@@ -211,9 +198,9 @@ def parse_feed(feed_url):
             "published": published,
             "image_url": image_url,
             "description": description,
-            "type": content_type,  # Tipo de contenido
-            "category": category,  # Categoría
-            "subcategory": subcategory,  # Subcategoría
+            "type": content_type,
+            "category": category,
+            "subcategory": subcategory,
             "source": source,
             "lat": None,
             "lon": None
