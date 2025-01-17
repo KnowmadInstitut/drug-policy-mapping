@@ -124,13 +124,67 @@ def geocode_location(location_str):
         print(f"[ERROR] geocoding {location_str}: {e}")
     return None
 
+def extract_location_from_metadata(entry):
+    """
+    Intenta extraer ubicación de los metadatos del feed.
+    """
+    if hasattr(entry, 'geo_lat') and hasattr(entry, 'geo_long'):
+        return (float(entry.geo_lat), float(entry.geo_long))
+    elif hasattr(entry, 'location'):
+        return geocode_location(entry.location)
+    return None
+
+def extract_location_from_additional_fields(entry):
+    """
+    Busca ubicaciones en otros campos como 'author' o 'category'.
+    """
+    fields_to_check = ['author', 'category', 'source']
+    for field in fields_to_check:
+        if hasattr(entry, field):
+            location = extract_possible_location(getattr(entry, field, ''))
+            if location:
+                return geocode_location(location)
+    return None
+
+def geocode_entry(entry):
+    """
+    Geolocaliza una entrada basada en metadatos, contenido textual y campos adicionales.
+    """
+    # 1. Priorizar metadatos geográficos
+    coords = extract_location_from_metadata(entry)
+    if coords:
+        return coords
+
+    # 2. Buscar en campos adicionales como 'author', 'category'
+    coords = extract_location_from_additional_fields(entry)
+    if coords:
+        return coords
+
+    # 3. Extraer desde el texto del título y resumen
+    full_text = f"{entry.get('title', '')} {entry.get('summary', '')}"
+    possible_location = extract_possible_location(full_text)
+    if possible_location:
+        coords = geocode_location(possible_location)
+        if coords:
+            return coords
+
+    # 4. Registrar como no geolocalizado
+    print(f"[WARNING] No se pudo geolocalizar: {entry.get('title', 'Sin título')}")
+    return None
+
 def generate_description(title, summary, link):
+    """
+    Genera una descripción coherente incluso si el resumen o título están incompletos.
+    """
     if not summary:
         summary = "Descripción no disponible."
     description_text = f"**{title}**\n\n{summary}\n\n[[{link}|Ver la fuente]]"
     return description_text
 
 def generate_apa_citation(title, link, published):
+    """
+    Genera una referencia APA7 válida incluso si faltan datos.
+    """
     if not title:
         title = "Sin título"
     if not published:
@@ -140,6 +194,9 @@ def generate_apa_citation(title, link, published):
     return f"{title}. ({published}). [Blog post]. Recuperado de {link}"
 
 def determine_type(title, description):
+    """
+    Determina el tipo de contenido basado en palabras clave en el título o descripción.
+    """
     keywords = {
         "prohibicionista": ["prohibición", "guerra contra las drogas", "represión"],
         "antiprohibicionista": ["regulación", "legalización", "reducción de daños"],
@@ -152,24 +209,6 @@ def determine_type(title, description):
             return tipo.capitalize()
     return "Otro"
 
-def determine_category(title, description):
-    indicators = {
-        "Human Rights and Public Health": [
-            ("Harm Reduction", ["reducción de daños", "consumo supervisado", "naloxona"]),
-            ("Universal Access to Health Services", ["acceso universal", "servicios de salud", "atención integral"]),
-        ],
-        "Regulatory Framework": [
-            ("Regulation of Specific Substances", ["regulación", "psicodélicos", "cannabis"]),
-            ("Decriminalization of Personal Use", ["despenalización", "uso personal"]),
-        ],
-    }
-
-    for category, subcategories in indicators.items():
-        for subcategory, keywords in subcategories:
-            if any(keyword in title.lower() or keyword in description.lower() for keyword in keywords):
-                return category, subcategory
-    return "Otros", "Sin subcategoría"
-
 def parse_feed(feed_url):
     feed = feedparser.parse(feed_url)
     entries = []
@@ -181,40 +220,18 @@ def parse_feed(feed_url):
         published = getattr(e, 'published', '')
         source = getattr(e, 'source', 'Fuente desconocida')
 
-        image_url = None
-        if hasattr(e, 'media_content') and e.media_content:
-            image_url = e.media_content[0].get('url')
-        elif hasattr(e, 'media_thumbnail') and e.media_thumbnail:
-            image_url = e.media_thumbnail[0].get('url')
-
-        description = generate_description(title, summary, link)
-        content_type = determine_type(title, summary)
-        category, subcategory = determine_category(title, summary)
+        coords = geocode_entry(e)
 
         new_entry = {
             "title": title,
             "summary": summary,
             "link": link,
             "published": published,
-            "image_url": image_url,
-            "description": description,
-            "type": content_type,
-            "category": category,
-            "subcategory": subcategory,
-            "source": source,
-            "lat": None,
-            "lon": None
+            "lat": coords[0] if coords else None,
+            "lon": coords[1] if coords else None,
+            "description": generate_description(title, summary, link),
+            "apa_citation": generate_apa_citation(title, link, published),
         }
-
-        if USE_GEOCODING:
-            full_text = f"{title} {summary}"
-            possible_location = extract_possible_location(full_text)
-            if possible_location:
-                coords = geocode_location(possible_location)
-                if coords:
-                    new_entry["lat"] = coords[0]
-                    new_entry["lon"] = coords[1]
-
         entries.append(new_entry)
 
     return entries
@@ -229,25 +246,13 @@ def generate_geojson(data):
         lat = item.get("lat")
         lon = item.get("lon")
         if lat is not None and lon is not None:
-            title = item.get("title", "No Title")
-            link = item.get("link", "")
-            published = item.get("published", "")
-            image_url = item.get("image_url", None)
-            description = item.get("description", "Descripción no disponible.")
-            apa_citation = generate_apa_citation(title, link, published)
-
             feature = {
                 "type": "Feature",
                 "properties": {
-                    "title": title,
-                    "description": description,
-                    "published": published,
-                    "apa_citation": apa_citation,
-                    "category": item.get("category"),
-                    "subcategory": item.get("subcategory"),
-                    "type": item.get("type"),
-                    "source": item.get("source"),
-                    "image_url": image_url
+                    "title": item.get("title", "No Title"),
+                    "description": item.get("description", "Descripción no disponible."),
+                    "published": item.get("published", ""),
+                    "apa_citation": item.get("apa_citation"),
                 },
                 "geometry": {
                     "type": "Point",
