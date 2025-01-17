@@ -81,7 +81,16 @@ RSS_FEEDS = [
     "https://www.google.com/alerts/feeds/01872346950212075020/2747047499171357488",
     "https://www.google.com/alerts/feeds/01872346950212075020/1447816832278231203",
     "https://www.google.com/alerts/feeds/01872346950212075020/9877437808332649348",
-    "https://www.google.com/alerts/feeds/01872346950212075020/9301003631655820249"
+    "https://www.google.com/alerts/feeds/01872346950212075020/9301003631655820249",
+    "https://www.google.com/alerts/feeds/01872346950212075020/3355835436393953033",
+    "https://www.google.com/alerts/feeds/01872346950212075020/3355835436393951674",
+    "https://www.google.com/alerts/feeds/01872346950212075020/17943388756403922193",
+    "https://www.google.com/alerts/feeds/01872346950212075020/3172691028773162273",
+    "https://www.google.com/alerts/feeds/01872346950212075020/6727361044322319894",
+    "https://www.google.com/alerts/feeds/01872346950212075020/2176816698376521583",
+    "https://www.google.com/alerts/feeds/01872346950212075020/16719833965094972603",
+    "https://www.google.com/alerts/feeds/01872346950212075020/17588409156472668558",
+    "https://www.google.com/alerts/feeds/01872346950212075020/15574369732216859283"
 ]
 
 MASTER_JSON = "master_data.json"
