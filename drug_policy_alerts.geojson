@@ -1,4 +1,85 @@
 {
   "type": "FeatureCollection",
-  "features": []
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Renton, WA man sentenced to 5 years for money laundering in family <b>drug</b> ring",
+        "description": "**Renton, WA man sentenced to 5 years for money laundering in family <b>drug</b> ring**\n\n... drug ring involving his son and daughter. Frank Lozano Graves, 57, was arrested in July 2023 following a year-long <b>drug trafficking</b> investigation.\n\n[[https://www.google.com/url?rct=j&sa=t&url=https://www.fox13seattle.com/news/renton-man-sentenced-family-drug-ring&ct=ga&cd=CAIyHDUyZWIyYjc3NGQwNzc1Mzg6Y29tOmVzOlVTOkw&usg=AOvVaw3t26MZ2wEi1exc5jjuvOoE|Ver la fuente]]",
+        "published": "2025-01-18T00:09:59Z",
+        "apa_citation": "Renton, WA man sentenced to 5 years for money laundering in family <b>drug</b> ring. (2025-01-18T00:09:59Z). [Blog post]. Recuperado de https://www.google.com/url?rct=j&sa=t&url=https://www.fox13seattle.com/news/renton-man-sentenced-family-drug-ring&ct=ga&cd=CAIyHDUyZWIyYjc3NGQwNzc1Mzg6Y29tOmVzOlVTOkw&usg=AOvVaw3t26MZ2wEi1exc5jjuvOoE"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          34.704887,
+          -15.638786
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Suspect faces multiple <b>drug</b> charges during Florence Co. <b>traffic</b> stop",
+        "description": "**Suspect faces multiple <b>drug</b> charges during Florence Co. <b>traffic</b> stop**\n\nA man was arrested and charged in Florence County on Thursday after failing to stop for a blue light and a variety of <b>drug trafficking</b> counts.\n\n[[https://www.google.com/url?rct=j&sa=t&url=https://abcnews4.com/news/crime-news/florence-co-arrest-made-on-i-95-suspect-faces-multiple-drug-charges-criminal-enforcement-driver-failed-stop-vehicle-pursuit-terrence-bernard-haskins-custody-charged-fentanyl-methamphetamine-crack-cocaine-oxycodone-mushroom-bars&ct=ga&cd=CAIyHDUyZWIyYjc3NGQwNzc1Mzg6Y29tOmVzOlVTOkw&usg=AOvVaw2QqDXUPwLtg9DxKpT6Vd65|Ver la fuente]]",
+        "published": "2025-01-17T22:20:35Z",
+        "apa_citation": "Suspect faces multiple <b>drug</b> charges during Florence Co. <b>traffic</b> stop. (2025-01-17T22:20:35Z). [Blog post]. Recuperado de https://www.google.com/url?rct=j&sa=t&url=https://abcnews4.com/news/crime-news/florence-co-arrest-made-on-i-95-suspect-faces-multiple-drug-charges-criminal-enforcement-driver-failed-stop-vehicle-pursuit-terrence-bernard-haskins-custody-charged-fentanyl-methamphetamine-crack-cocaine-oxycodone-mushroom-bars&ct=ga&cd=CAIyHDUyZWIyYjc3NGQwNzc1Mzg6Y29tOmVzOlVTOkw&usg=AOvVaw2QqDXUPwLtg9DxKpT6Vd65"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -88.3902943,
+          45.8379973
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "<b>Drug</b> trafficker sells pound of meth to undercover agent in South Carolina - WYFF",
+        "description": "**<b>Drug</b> trafficker sells pound of meth to undercover agent in South Carolina - WYFF**\n\n... <b>drug trafficking</b> activities. During the investigation, court documents showed that undercover ATF agents bought meth from Linney multiple times&nbsp;...\n\n[[https://www.google.com/url?rct=j&sa=t&url=https://www.wyff4.com/article/south-carolina-drug-trafficker-undercover-agent-nc/63459382&ct=ga&cd=CAIyHDUyZWIyYjc3NGQwNzc1Mzg6Y29tOmVzOlVTOkw&usg=AOvVaw1tzA6osu0v358eXIrbs7u-|Ver la fuente]]",
+        "published": "2025-01-17T21:15:59Z",
+        "apa_citation": "<b>Drug</b> trafficker sells pound of meth to undercover agent in South Carolina - WYFF. (2025-01-17T21:15:59Z). [Blog post]. Recuperado de https://www.google.com/url?rct=j&sa=t&url=https://www.wyff4.com/article/south-carolina-drug-trafficker-undercover-agent-nc/63459382&ct=ga&cd=CAIyHDUyZWIyYjc3NGQwNzc1Mzg6Y29tOmVzOlVTOkw&usg=AOvVaw1tzA6osu0v358eXIrbs7u-"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -80.4363743,
+          33.6874388
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Gaza ceasefire: What the Israel-Hamas agreement means - Brookings Institution",
+        "description": "**Gaza ceasefire: What the Israel-Hamas agreement means - Brookings Institution**\n\nPharmaceutical &amp; Drug Policy The fentanyl epidemic in North America and the global reach of <b>synthetic opioids</b>. December 4, 2024. Get the latest from&nbsp;...\n\n[[https://www.google.com/url?rct=j&sa=t&url=https://www.brookings.edu/articles/gaza-ceasefire-what-the-israel-hamas-agreement-means/&ct=ga&cd=CAIyHDhmMGY2NjlmYWRhNDVjZWI6Y29tOmVzOlVTOkw&usg=AOvVaw3snrfWchO1fVdSEmZWD-jX|Ver la fuente]]",
+        "published": "2025-01-18T00:53:46Z",
+        "apa_citation": "Gaza ceasefire: What the Israel-Hamas agreement means - Brookings Institution. (2025-01-18T00:53:46Z). [Blog post]. Recuperado de https://www.google.com/url?rct=j&sa=t&url=https://www.brookings.edu/articles/gaza-ceasefire-what-the-israel-hamas-agreement-means/&ct=ga&cd=CAIyHDhmMGY2NjlmYWRhNDVjZWI6Y29tOmVzOlVTOkw&usg=AOvVaw3snrfWchO1fVdSEmZWD-jX"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -109.0,
+          51.0000002
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "Man found dead in Cork city alleyway",
+        "description": "**Man found dead in Cork city alleyway**\n\nCorkbeo asked the HSE if there are plans to renew a recent warning to drug users in Cork about dangerous <b>synthetic</b> opiates being dealt on the streets.\n\n[[https://www.google.com/url?rct=j&sa=t&url=https://www.corkbeo.ie/news/local-news/man-found-dead-cork-city-30809340&ct=ga&cd=CAIyHDhmMGY2NjlmYWRhNDVjZWI6Y29tOmVzOlVTOkw&usg=AOvVaw1Kp4pJR-xBWjnqN0-DKTAS|Ver la fuente]]",
+        "published": "2025-01-18T00:24:26Z",
+        "apa_citation": "Man found dead in Cork city alleyway. (2025-01-18T00:24:26Z). [Blog post]. Recuperado de https://www.google.com/url?rct=j&sa=t&url=https://www.corkbeo.ie/news/local-news/man-found-dead-cork-city-30809340&ct=ga&cd=CAIyHDhmMGY2NjlmYWRhNDVjZWI6Y29tOmVzOlVTOkw&usg=AOvVaw1Kp4pJR-xBWjnqN0-DKTAS"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -8.4654674,
+          51.897077
+        ]
+      }
+    }
+  ]
 }
